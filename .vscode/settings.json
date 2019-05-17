@@ -1,0 +1,20 @@
+{
+    "workbench.colorCustomizations": {
+        "titleBar.activeBackground": "#26A69A",
+        "titleBar.inactiveBackground": "#26A69A"
+    },
+    "window.zoomLevel": 0,
+    "editor.fontSize": 14,
+    "editor.renderWhitespace": "all",
+    "eslint.enable": true,
+    "terminal.integrated.fontSize": 14,
+    "git.ignoreLimitWarning": true,
+    "editor.formatOnSave": true,
+    "[javascript]": {
+        "editor.formatOnSave": false
+    },
+    "eslint.autoFixOnSave": true,
+    "eslint.alwaysShowStatus": true,
+    "files.autoSave": "onFocusChange",
+    "javascript.validate.enable": false
+}
