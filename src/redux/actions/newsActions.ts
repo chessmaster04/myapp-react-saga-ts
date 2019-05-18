@@ -1,42 +1,58 @@
-import { all, take, put } from 'redux-saga/effects';
+import { all, take, put, takeLatest, fork, call } from 'redux-saga/effects';
 import { push } from 'connected-react-router';
 import axios from 'axios';
-import { GET_NEWS, PUT_NEWS_TO_STORE } from "../../types";
+import { FETCH_NEWSR_REQUEST_START, FETCH_NEWSR_REQUEST_COMPLETED } from "../types";
+import { NewsEntity } from "../../model";
+import { newsAPI } from "../../api/news";
 
 // ///////////
 // actions //
 // ///////////
 
 export const getNews = () => ({
-    type: GET_NEWS,
+    type: FETCH_NEWSR_REQUEST_START,
 });
+
+const getNewsCompleted = (news: NewsEntity[]) => ({
+    type: FETCH_NEWSR_REQUEST_COMPLETED,
+    payload: {
+        news
+    },
+})
 
 // ///////////
 // sagas ////
 // ///////////
 
 const getNewsSaga = function* () {
-    while (true)
-        try {
-            yield take(GET_NEWS)
-            // const result = yield axios.get('http://myserver/news');
-            yield put({
-                type: PUT_NEWS_TO_STORE,
-                // payload: result.data,
-                payload: {
-                    news: [{
-                        id: 1,
-                        title: "News1"
-                    }]
-                },
-            });
-        } catch (error) {
-            console.log("err");
-        }
+    let news: Array<NewsEntity>;
+    try {
+        news = yield call(newsAPI.fetchNewsAsync);
+    } catch (error) {
+        console.log(process.env)
+        // if (process.env.USE_MOCK_DATA === 1)
+        news = yield call(newsAPI.fetchNewsMock);
+        // else
+        // throw new Error();
+    }
+    yield put(getNewsCompleted(news));
 };
 
-export default function* () {
-    yield all([
-        getNewsSaga(),
-    ]);
-}
+export const getNewsSagaWatcher = function* () {
+    try {
+        yield takeLatest(FETCH_NEWSR_REQUEST_START, getNewsSaga);
+    } catch (error) {
+        console.log("err");
+    }
+    // takeLatest = while(true) + take + fork + cancel
+    // takeEvery = while(true) + take + fork
+    // the same:
+    // while (true)
+    //     try {
+    //         yield take(FETCH_NEWSR_REQUEST_START);
+    //         yield fork(getNewsSaga)
+    //     } catch (error) {
+    //         console.log("err");
+    //     }
+};
+

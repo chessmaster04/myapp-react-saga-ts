@@ -1,8 +1,8 @@
-import { all } from 'redux-saga/effects';
-import newsSaga from './newsActions';
+import { fork, all } from 'redux-saga/effects';
+import { getNewsSagaWatcher } from './newsActions';
 
 export default function* () {
     yield all([
-        newsSaga()
+        fork(getNewsSagaWatcher)
     ]);
 }
