@@ -56,12 +56,10 @@ describe('<News/>', () => {
         const wrapper: any = shallow(<News {...props} />);
         expect(actions.getNews).toHaveBeenCalled();
         console.log(toJson(wrapper));
-        // expect(
-        //     wrapper
-        //         .find('div')
-        //         .first()
-        //         .text(),
-        // ).not.toHaveLength(0);
+        expect(
+            wrapper
+                .find('ConnectFunction').length,
+        ).toEqual(3);
         done();
     });
 

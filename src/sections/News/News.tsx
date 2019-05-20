@@ -42,4 +42,4 @@ export class News extends React.Component<Props> {
     }
 }
 
-// export default connect(mapStateToProps, mapDispatchToProps)(News);
+export default connect(mapStateToProps, mapDispatchToProps)(News);
