@@ -3,12 +3,13 @@ import { bindActionCreators } from 'redux';
 import { connect } from '../../utils';
 // import { connect } from 'react-redux';
 import { State } from '../../redux/reducers/index';
-import { getNews } from "../../redux/actions/newsActions";
+import { getNews, delNewsItem } from "../../redux/actions/newsActions";
 import { NewsEntity } from "../../model";
+import NewsItem from "./components/NewsItem";
 
-type Props = {
-    news: object[],
-    actions: any
+export type Props = {
+    news: object[] | null,
+    actions: any | object
 }
 
 function mapStateToProps(state: State) {
@@ -19,25 +20,26 @@ function mapStateToProps(state: State) {
 
 const mapDispatchToProps = (dispatch: any) => {
     return {
-        actions: bindActionCreators({ getNews }, dispatch)
+        actions: bindActionCreators({ getNews, delNewsItem }, dispatch)
     };
 }
 
-@connect(mapStateToProps, mapDispatchToProps)
-export default class News extends React.Component<Props> {
+export class News extends React.Component<Props> {
     componentDidMount() {
         this.props.actions.getNews();
     }
     render() {
-        console.log(this.props.news);
+        const onDel = this.props.actions.delNewsItem;
         const news: NewsEntity[] | any = this.props.news;
         return (
             <>
                 <h2>News</h2>
-                {Array.isArray(news) && news.map((item: NewsEntity): ReactElement => {
-                    return <span key={item.id}>{item.title}</span>
+                {Array.isArray(news) && news.map((data: NewsEntity): ReactElement => {
+                    return <NewsItem {...{ data, onDel, key: data.id }} />
                 })}
             </>
         )
     }
 }
+
+// export default connect(mapStateToProps, mapDispatchToProps)(News);

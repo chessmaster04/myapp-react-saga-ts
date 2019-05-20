@@ -1,1 +1,1 @@
-export * from './newsEntity';
+export * from './news';
